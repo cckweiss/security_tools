@@ -1,0 +1,248 @@
+This is the procedure to build the Shibboleth Service Provider and configure Shibboleth and Apache to work properly with DMPTool:
+
+Using instructions found at https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPLinuxSourceBuild\\
+
+and
+
+https://confluence.cornell.edu/display/SHIBBOLETH/Shibboleth+Service+Provider-+Linux+Installation+from+Source\\
+
+and even though it’s for Solaris, there were some useful details here:
+
+https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSolarisSourceBuild\\
+
+mkdir /dmp2/src 
+
+mkdir /dmp2/local 
+
+cd /dmp2/src 
+
+wget http://sourceforge.net/projects/boost/files/boost/1.52.0/boost_1_52_0.zip/download
+
+NOTE: versions above 1.52 will not work due to a bug in Shibboleth 
+
+wget http://apache.mirrors.tds.net/xerces/c/3/sources/xerces-c-3.1.1.tar.gz
+
+wget http://mirrors.gigenet.com/apache/santuario/c-library/xml-security-c-1.7.1.tar.gz
+
+wget http://curl.haxx.se/download/curl-7.30.0.tar.gz
+
+wget http://shibboleth.net/downloads/c++-opensaml/2.5.3/xmltooling-1.5.3.tar.gz
+
+wget http://shibboleth.net/downloads/c++-opensaml/2.5.3/opensaml-2.5.3.tar.gz
+
+wget http://zlib.net/zlib-1.2.8.tar.gz
+
+wget http://shibboleth.net/downloads/service-provider/latest/shibboleth-sp-2.5.2.tar.gz
+
+wget http://shibboleth.net/downloads/log4shib/1.0.7/log4shib-1.0.7.tar.gz
+
+cd /dmp2/local 
+
+unzip /dmp2/src/boost_1_52_0.zip  
+
+cd /dmp2/src 
+
+tar -zxvf xerces-c-3.1.1.tar.gz  
+
+cd /dmp2/src/xerces-c-3.1.1 
+
+./configure --prefix=/dmp2/local/shibboleth-sp --disable-netaccessor-libcurl 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/log4shib-1.0.7.tar.gz
+
+cd /dmp2/src/log4shib-1.0.7 
+
+./configure --disable-static --disable-doxygen --prefix=/dmp2/local/shibboleth-sp 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf xml-security-c-1.7.1.tar.gz
+
+cd /dmp2/src/xml-security-c-1.7.1 
+
+./configure --without-xalan --disable-static --with-xerces=/dmp2/local/shibboleth-sp --prefix=/dmp2/local/shibboleth-sp 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/curl-7.30.0.tar.gz
+
+cd /dmp2/src/curl-7.30.0 
+
+./configure --disable-static --enable-thread --without-ca-bundle --prefix=/dmp2/local/shibboleth-sp --with-openssl=/usr/bin/openssl 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/xmltooling-1.5.3.tar.gz
+
+cd /dmp2/src/xmltooling-1.5.3 
+
+./configure --prefix=/dmp2/local/shibboleth-sp --with-log4shib=/dmp2/local/shibboleth-sp --with-curl=/dmp2/local/shibboleth-sp --with-openssl=/usr/include/openssl --with-boost=/dmp2/local/boost_1_52_0 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/opensaml-2.5.3.tar.gz
+
+cd /dmp2/src/opensaml-2.5.3 
+
+./configure --prefix=/dmp2/local/shibboleth-sp --with-log4shib=/dmp2/local/shibboleth-sp --with-openssl=/usr/include/openssl --with-boost=/dmp2/local/boost_1_52_0 
+
+make 
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/zlib-1.2.8.tar.gz
+
+cd /dmp2/src/zlib-1.2.8
+
+./configure --prefix=/dmp2/local/shibboleth-sp
+
+make
+
+make install
+
+cd /dmp2/src
+
+tar -zxvf /dmp2/src/shibboleth-sp-2.5.2.tar.gz
+
+cd /dmp2/src/shibboleth-sp-2.5.2 
+
+./configure --prefix=/dmp2/local/shibboleth-sp --with-log4shib=/dmp2/local/shibboleth-sp --with-boost=/dmp2/local/boost_1_52_0 
+
+make 
+
+make install 
+
+
+MILESTONE: Test for basic execution of shibd with no errors (warnings are OK) 
+
+/dmp2/local/shibboleth-sp/sbin/shibd -t
+
+2013-06-24 13:14:33 WARN Shibboleth.Application : insecure cookieProps setting, set to "https" for SSL/TLS-only usage
+
+2013-06-24 13:14:33 WARN Shibboleth.Application : handlerSSL should be enabled for SSL/TLS-enabled web sites
+
+2013-06-24 13:14:33 WARN Shibboleth.Application : no MetadataProvider available, configure at least one for standard SSO usage
+
+overall configuration is loadable, check console for non-fatal problems 
+
+SET UP START/STOP SCRIPTS 
+
+cd /dmp2/init.d 
+
+Create Apache start script (see apache2 file attached to this wiki page) 
+
+cp /dmp2/local/shibboleth-sp/etc/shibboleth/shibd-suse ./shibd 
+
+Add: export LD_LIBRARY_PATH='/dmp2/local/shibboleth-sp/lib'
+
+to both apachectl and shibd-suse 
+
+Edit shibd-suse and change SHIBD-USER=root to SHIBD-USER=dmp2 
+
+chmod 755 shibd-suse 
+
+mv shibd-suse shibd 
+
+
+CONFIGURE SSL FOR APACHE (required for Shibboleth) – use self-signed certificate for now, obtain CA-issued certificate later
+
+cd /dmp2/apps/apache/conf/extra 
+
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout star.dmp2-dev.cdlib.org.pem -out star.dmp2-dev.cdlib.org.pem
+
+Generating a 2048 bit RSA private key
+
+......................................................+++
+
+.......................................+++
+
+writing new private key to 'dmp2-dev.cdlib.org.pem'
+
+-----
+
+You are about to be asked to enter information that will be incorporated
+
+into your certificate request.
+
+What you are about to enter is what is called a Distinguished Name or a DN.
+
+There are quite a few fields but you can leave some blank
+
+For some fields there will be a default value,
+
+If you enter '.', the field will be left blank.
+
+-----
+
+Country Name (2 letter code) [AU]:US
+
+State or Province Name (full name) [Some-State]:California
+
+Locality Name (eg, city) []:Oakland
+
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:California Digital Library
+
+Organizational Unit Name (eg, section) []:UC Curation Center
+
+Common Name (eg, YOUR name) []:*.cdlib.org
+
+Email Address []:ken.weiss@ucop.edu 
+
+
+Uncomment the ‘Include’ line in httpd.conf as follows: 
+
+# Secure (SSL/TLS) connections
+
+Include conf/extra/httpd-ssl.conf 
+
+Set up the conf/extras/httpd-ssl.conf file for multiple named SSL hosts per: 
+
+http://www.crsr.net/Notes/Apache-HTTPS-virtual-host.html
+
+and  
+
+http://wiki.apache.org/httpd/NameBasedSSLVHosts
+
+This is a hack and will never look pretty to your browser, but it does work. You should now have three virtual hosts capable of serving both HTTP and HTTPS connections. 
+
+Add the content of /dmp2/local/shibboleth-sp/etc/shibboleth/apache22.config to /dmp2/apps/apache/conf/httpd.conf 
+
+Restart Apache (/dmp2/init.d/apachectl start) 
+
+Start the Shibboleth daemon (/dmp2/init.d/shibd start) 
+
+Test the SP installation per: 
+
+https://itservices.stanford.edu/service/shibboleth/sp/test-shib
+
+Configure Apache to act as reverse-proxy to port 20225, 20325, 20425 (see httpd.conf, httpd-vhosts.conf, and httpd-ssl.conf files attached to DMP2 Operations wiki page https://confluence.ucop.edu/display/UC3/DMP2+Dev+Server+Deployment)
+
+Configure /dmp2/local/shibboleth2-sp/etc/shibboleth/shibboleth2.xml to set up entityID and connection to testshib.org IDP, per instructions at https://www.testshib.org/ (See the shibboleth2.xml file attached to this wiki page) 
+
+Restart shibd and Apache 
+
+Test 

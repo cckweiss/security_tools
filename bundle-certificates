@@ -1,0 +1,140 @@
+Start here if you have a server that is already configured with SSL and you just need to update the certificates.
+
+1) Copy the new certificate files to /tmp
+
+2) Log in to the host as kweiss (or any other user that can su - dpr2)
+
+3) sudo su - dpr2 (the user that owns the OpenDS implementation)
+
+4) cd to the directory containing the new certificates
+
+5) Generate the PKCS12 package with the following command. This will bundle the server certificate, server private key, and trust chain to the root CA into a single keystore:
+
+openssl pkcs12 -export -in uc3-ldap_cdlib_org_san.cer -inkey uc3-ldap_cdlib_org_san.key -certfile int_root/Intermediate_root.ca-bundle -out uc3-chain.p12 -passout pass:[see note below] -name "server-cert"
+
+Note: Use the string found in /dpr2/opends/config/keystore.pin for the
+password for the new keystore.
+
+6) Confirm that the new PKCS12 keystore was created:
+
+ls -l *.p12 (you should see a new file named uc3-chain.p12)
+
+7) Back up the existing keystore and truststore:
+
+cd /dpr2/opends/config
+mv keystore keystore-YYYYMMDD (today's date)
+mv truststore truststore-YYYYMMDD
+
+8) Remove the server from load balancing (You will need to open a Service Now ticket and have Network Operations do this for you. The load balancer is uc3-ldap.cdlib.org. As of 7/2013 the person to work with in Network Operations is Jim Kassenbrock)
+
+9) Import the new keystore and truststore
+
+keytool -importkeystore -srckeystore /tmp/uc3-ldap_cdlib_org/uc3-chain.p12 -srcstoretype PKCS12 -destkeystore ./keystore
+
+keytool -importkeystore -srckeystore /tmp/uc3-ldap_cdlib_org/uc3-chain.p12 -srcstoretype PKCS12 -destkeystore ./truststore
+
+Again, use the string found in the keystore.pin file any time you are prompted for a password.
+
+10) Restart the OpenDS server
+
+cd /dpr2/opends/bin
+./stop-ds --restart
+
+11) Validate the changes by running an LDAP search:
+
+./ldapsearch -h dp08.cdlib.org -p 1636 -Z -D cn="Directory Manager" -w
+wah8oLab -b ou=uc3,dc=cdlib,dc=org -s sub uid=sfisher
+
+If you are prompted to accept the certificate, say 'yes'. You should then
+see an LDAP search result, as follows:
+
+The server is using the following certificate:
+Subject DN: CN=uc3-ldap.cdlib.org, OU=IRC, O=University of California
+Office of the President, STREET=1111 Franklin Street, L=Oakland, ST=CA,
+OID.2.5.4.17=94607, C=US
+Issuer DN: CN=InCommon Server CA, OU=InCommon, O=Internet2, C=US
+Validity: Sun Jun 02 17:00:00 PDT 2013 through Mon May 30 16:59:59
+PDT 2016
+Do you wish to trust this certificate and continue connecting to the
+server?
+Please enter "yes" or "no":yes
+dn: uid=sfisher,ou=People,ou=uc3,dc=cdlib,dc=org
+ezidOwnerGroup: o=cdl,ou=ezid-groups,ou=uc3,dc=cdlib,dc=org
+givenName: Scott
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: merrittUser
+objectClass: ezidUser
+objectClass: top
+objectClass: dmpUser
+tzRegion: America/Los_Angeles
+uid: sfisher
+cn: Scott Fisher
+sn: Fisher
+telephoneNumber: 510-287-3833
+userPassword:IkMnwfrZzP16R+CdZf3gxHvC3S9PDcVjc2AZdQ==
+arkId: ark:/99166/p9zp3w015
+mail: scott.fisher@ucop.edu
+displayName: Scott Fisher
+
+12) Place the server back in load balancing. (You will need to open a Service Now ticket and have Network Operations do this for you. The load balancer is uc3-ldap.cdlib.org. As of 7/2013 the person to work with in Network Operations is Jim Kassenbrock)
+
+13 )Confirm trust manager, key manager, and connection manager configurations in OpenDS:
+
+dsconfig -D "cn=directory manager" -w wah8oLab -n get-connection-handler-prop --handler-name "LDAPS Connection Handler"
+Property               : Value(s)
+------------:-------
+allow-ldap-v2          : true
+allow-start-tls        : false
+allowed-client         : -
+denied-client          : -
+enabled                : true
+keep-stats             : true
+key-manager-provider   : JKS
+listen-address         : 0.0.0.0
+listen-port            : 1636
+ssl-cert-nickname      : server-cert
+ssl-cipher-suite       : -
+ssl-client-auth-policy : optional
+ssl-protocol           : -
+trust-manager-provider : JKS
+use-ssl                : true
+
+/dsconfig -D "cn=directory manager" -w wah8oLab -n get-key-manager-provider-prop --provider-name "JKS"
+Property                           : Value(s)
+------------------------:-----------
+enabled                            : true
+key-store-file                     : config/keystore
+key-store-pin                      : secret
+key-store-pin-environment-variable : -
+key-store-pin-file                 : config/keystore.pin
+key-store-pin-property             : -
+key-store-type                     : JKS
+
+/dsconfig -D "cn=directory manager" -w wah8oLab -n get-trust-manager-provider-prop --provider-name "JKS"
+Property                             : Value(s)
+--------------------------:---------
+enabled                              : true
+trust-store-file                     : config/truststore
+trust-store-pin                      : -
+trust-store-pin-environment-variable : -
+trust-store-pin-file                 : -
+trust-store-pin-property             : -
+trust-store-type                     : JKS
+
+Rollback procedure:
+
+Move or delete the newly-installed truststore and keystore:
+
+mv truststore truststore-COMMERCIAL-CA-WORKS
+
+mv keystore keystore-COMMERCIAL-CA-WORKS
+
+Re-install the original keystore and truststore:
+
+mv truststore-[today's date] truststore
+
+mv keystore-[today's date] keystore
+
+Restart the OpenDS server
