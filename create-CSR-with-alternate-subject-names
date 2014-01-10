@@ -1,10 +1,23 @@
-You need to supply a config file that contains the SAN entries and then call it in the openssl command.  Here’s the template that I use for the command line:
+You need to supply a config file that contains the SAN entries and then call it in the 
+openssl command.  Here’s the template that I use for the command line:
  
 openssl req -new -nodes -newkey rsa:2048 -config /Users/jkassenb/Desktop/InCommon/example_san.cnf -reqexts req_ext -keyout /Users/jkassenb/Desktop/InCommon/example.key -out /Users/jkassenb/Desktop/InCommon/example.csr
  
-The ‘-config’ argument just says “read this file for some parameters”, in this case “example_san.cnf”.  I grabbed an example .cnf file (attached) from somewhere a few years ago and I use it as a template for any SAN certificate requests.  It’s plaintext so you can open it with whatever editor you prefer.  The part you care about is at the end of the file under the "[ alt_names ]" header.  This is where you’ll put in whatever aliases you’ll need in addition to the main Subject Name.  I’ve left a bunch of entries in the sample so that you can see the correct format.  There’s supposedly no limit to the number of “alt_name” entries you can add, but one person that tried 4000 (!) ran into some problems, another that used 500 had no issues whatsoever.
+The ‘-config’ argument just says “read this file for some parameters”, in this case 
+“example_san.cnf”.  I grabbed an example .cnf file (attached) from somewhere a few years 
+ago and I use it as a template for any SAN certificate requests.  It’s plaintext so you 
+can open it with whatever editor you prefer.  The part you care about is at the end of the 
+file under the "[ alt_names ]" header.  This is where you’ll put in whatever aliases 
+you’ll need in addition to the main Subject Name.  I’ve left a bunch of entries in the 
+sample so that you can see the correct format.  There’s supposedly no limit to the number 
+of “alt_name” entries you can add, but one person that tried 4000 (!) ran into some 
+problems, another that used 500 had no issues whatsoever.
  
-When you run the openssl command above, you’ll be prompted for some input (Country, State, Locality, etc.),  I’ve set some UCOP/ITS-specific defaults, but you can change these if needed.  The final prompt will be for the Common Name which is the primary Subject Name that will be used for the cert.  After that, the key and csr files are generated and you’re ready to go.
+When you run the openssl command above, you’ll be prompted for some input (Country, State, 
+Locality, etc.),  I’ve set some UCOP/ITS-specific defaults, but you can change these if 
+needed.  The final prompt will be for the Common Name which is the primary Subject Name 
+that will be used for the cert.  After that, the key and csr files are generated and 
+you’re ready to go.
 
 #
 # OpenSSL example configuration file.
