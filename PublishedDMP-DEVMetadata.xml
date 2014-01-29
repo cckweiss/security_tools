@@ -1,0 +1,62 @@
+<EntityDescriptor entityID="https://dmp-dev.cdlib.org" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:Extensions xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+      <DiscoveryResponse xmlns="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://dmp-dev.cdlib.org/Shibboleth.sso/Login" index="1"/>
+      <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+        <mdui:DisplayName xml:lang="en">dmp-dev</mdui:DisplayName>
+      </mdui:UIInfo>
+    </md:Extensions>
+    <md:KeyDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+<!-- Serial No. 18385770954492677166, expires on Mon Aug 23 15:44:36 2021 GMT -->
+          <ds:X509Certificate>
+MIIDLDCCAhSgAwIBAgIJAP8nYUVoOwwuMA0GCSqGSIb3DQEBBQUAMBgxFjAUBgNV
+BAMTDWRtcC5jZGxpYi5vcmcwHhcNMTEwODI2MTU0NDM2WhcNMjEwODIzMTU0NDM2
+WjAYMRYwFAYDVQQDEw1kbXAuY2RsaWIub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAv+SS70RQmx9eI6GAAPKhb7G79Oz6VM9zoCc2RMihR0PsXH+4
+H8jr0OrrTYXw6Bvoy4q+nYoE/O94L427ayngaxsZGG99LOkqOnNJqx8YyhcHU+2V
+zE1H1puwHGtHjC8HaG5RAE2u+GBdfRFo7YwDiWZcovnxw1ADXpAebIIM6R6jFaam
+dRVAJld1USuxwe+v4BxhaQ983VNlDWD7tB/ppBYFIxaxc5eRYQ5Xhdc/tFbO7/R+
+7mNv1zEyx4j1d397abzLiWyUAfLYT9AnYY+G6JiXxiQ1Keq3Twkg3XGp6zI70RZR
++CERZwZdV7T87DlVTRH+SLhlyL98NM8ftn+fqQIDAQABo3kwdzAdBgNVHQ4EFgQU
+NLEE8UmJURVhhxGQ9wjQTaLqwDUwSAYDVR0jBEEwP4AUNLEE8UmJURVhhxGQ9wjQ
+TaLqwDWhHKQaMBgxFjAUBgNVBAMTDWRtcC5jZGxpYi5vcmeCCQD/J2FFaDsMLjAM
+BgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4IBAQBVMgL73mP25ZYAyPUZlI/Z
+cO90zkhwQcoTYtIpdS2KE+XvLpC9yYFk7Xz+IaCbU7KYey/ZpW7MUTvddoSzRPDS
+ulbxSugdfV7QVrt9bzaHSe8w20yMaVtRWAN8E9mFJNwJ8VSptxacc0ZdScHfmc76
+HejyMr9it7EuvpsxFQqDbgHqeXhqwdXrLiwTjn75bhx9+uT251W1wYG4gQ3R6Zly
+GSxO/I6if4vmR2y2vdDtugBNlmkIMwcE1pHTWxN0gHIQnItco+nQVrTzYmIgHMwv
+IdAUy0C4K5PdSbV8IUX1OZkeZyiQCdMs74p3IvKE57weopAz5Kxhiq9FlMh/LTx3
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://dmp-dev.cdlib.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://dmp-dev.cdlib.org/Shibboleth.sso/SAML/POST" index="2"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://dmp-dev.cdlib.org/Shibboleth.sso/SAML/Artifact" index="3"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://dmp2-dev.cdlib.org/Shibboleth.sso/SAML2/POST" index="4"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://dmp2-dev.cdlib.org/Shibboleth.sso/SAML2/Artifact" index="5"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://dmp2-dev.cdlib.org/Shibboleth.sso/SAML/POST" index="6"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://dmp2-dev.cdlib.org/Shibboleth.sso/SAML2/POST-SimpleSign" index="7"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://dmp2-dev.cdlib.org/Shibboleth.sso/SAML2/ECP" index="8"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://dmp2-development.cdlib.org/Shibboleth.sso/SAML2/POST" index="9"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://dmp2-development.cdlib.org/Shibboleth.sso/SAML2/Artifact" index="10"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://dmp2-development.cdlib.org/Shibboleth.sso/SAML/POST" index="11"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://dmp2-development.cdlib.org/Shibboleth.sso/SAML2/POST-SimpleSign" index="12"/>
+    <md:AssertionConsumerService xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://dmp2-development.cdlib.org/Shibboleth.sso/SAML2/ECP" index="13"/>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">University of California - Office of the President</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">University of California - Office of the President</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">http://www.ucop.edu/welcome.html</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Marisa Strong</GivenName>
+    <EmailAddress>marisa.strong@ucop.edu</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ken Weiss</GivenName>
+    <EmailAddress>ken.weiss@ucop.edu</EmailAddress>
+  </ContactPerson>
+</EntityDescriptor>
