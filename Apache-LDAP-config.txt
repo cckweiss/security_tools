@@ -1,0 +1,4 @@
+To get the Apache LDAP module to connect with a TLS (SSL) enabled LDAP server, add the following to httpd.conf:
+
+LDAPVerifyServerCert On
+LDAPTrustedGlobalCert CA_BASE64 /apps/nagios/ssl/2024-04-23/cacert.pem (path to CA certificate)
